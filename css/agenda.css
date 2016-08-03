@@ -1,0 +1,72 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 26/07/2016, 08:42:13
+    Author     : CARLOS
+*/
+
+.form{
+    margin-left: 30px;
+    margin-top: 10px;
+}
+.formulario{
+    //margin-left: 110px;
+}
+
+.data-agenda{
+    text-align: center;
+    margin-top: 1px;
+    width: 250px;
+    
+    
+    
+    
+}
+
+input[type=text]{
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.botao{
+    margin-top: 0px;
+}
+
+.linha{
+    background: #0088cc;
+}
+.container{
+   //width: 1550px;
+   
+}
+
+.titulo{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.ordem{
+    
+    
+    
+    //border: 1px solid;
+    
+}
+
+
+p{
+    
+    color: #fff;
+    //margin-top: 20px;
+    //position: absolute;
+    font-weight: bold;
+    //margin-left: 1px;
+    margin-top: -17px;
+    //margin-top: 50px;
+    //text-align: center;
+    //border: 1px solid;
+}

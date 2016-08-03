@@ -1,0 +1,15 @@
+#main {
+  margin-top: 50px;
+}
+
+.agenda{
+    margin-left: 10px;
+    
+}
+
+.data-agenda{
+ text-align: center;   
+ font-size: 18px; 
+ font-weight: bold;
+ text-transform: uppercase;
+} 
