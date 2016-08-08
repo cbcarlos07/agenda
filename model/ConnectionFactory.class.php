@@ -11,6 +11,7 @@ class ConnectionFactory{
                         )
                         )"; 
     public  function  getConnection(){
+            putenv("NLS_LANG=PORTUGUESE_BRAZIL.AL32UTF8") or die("Falha ao inserir a variavel de ambiente");
             $ora_conexao = oci_connect($this->ora_user, $this->ora_senha, $this->ora_bd);
         return $ora_conexao;
                     
