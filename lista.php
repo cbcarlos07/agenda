@@ -47,22 +47,7 @@ if(isset($_GET['nome'])){
         <link href="css/autocomplete.css" rel="stylesheet">
         <link rel="shortcut icon" href="img/ham.png">        
         <script src="js/jquery.js.js"></script>
-        <script>
-          function getDate(){
-               var dt; 
-               var data = new Date();
-                var dia = data.getDate();
-                if (dia.toString().length == 1)
-                  dia = "0"+dia;
-                var mes = data.getMonth()+1;
-                if (mes.toString().length == 1)
-                  mes = "0"+mes;
-                var ano = data.getFullYear();  
-                 dt = dia+"/"+mes+"/"+ano;
-               $("#datepicker").val(dt);
-               console.log(dt);
-          }
-        </script>
+        <script src="js/tooltip.js"></script>
     </head>
     <body >
         <!-- Modal -->
@@ -87,9 +72,31 @@ if(isset($_GET['nome'])){
         ?>
         <div id="main" class="container-fluid ">
             <br>
-            <div class="col-md-12 ">
+            <div class="col-md-12 " >
                 <center><h3 style="font-weight: bold;"><?php echo $_SESSION['nome']; ?></h3></center>
+                 <div class="col-md-11 " align="right">
+                     <?php
+                     require_once './controller/Paciente_Controller.class.php';
+                     require_once './servicos/PacienteListIterator.class.php';
+                     require_once './beans/Paciente.class.php';
+                
+                
+                    $pc =  new Paciente_Controller();
+                    $paciente = new Paciente();
+                    $paciente1 = new Paciente();
+                    $pacienteList_in =  $pc->lista( $_SESSION['data'], $_SESSION['codigo']);
+                    $pacienteList = new PacienteListIterator($pacienteList_in);
+                    $pacienteList1 = new PacienteListIterator($pacienteList_in);
+                    if ($pacienteList1->hasNextPaciente()){
+                        $paciente1 = $pacienteList1->getNextPaciente();
+                        $media = $paciente1->getMedia();
+                }           
+                echo "M&Eacute;DIA: ".$media;
+                     ?>
+                    
+                </div>
             </div>
+           
             
           <!--  <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">-->
                     <div class="row col-md-12 "> 
@@ -116,42 +123,44 @@ if(isset($_GET['nome'])){
                      </div>
            <!--  </form>-->
                 <?php
-                require_once './controller/Paciente_Controller.class.php';
-                require_once './servicos/PacienteListIterator.class.php';
-                require_once './beans/Paciente.class.php';
                 
-                
-                $pc =  new Paciente_Controller();
-                $paciente = new Paciente();
-                $pacienteList_in =  $pc->lista( $_SESSION['data'], $_SESSION['codigo']);
-                $pacienteList = new PacienteListIterator($pacienteList_in);
                 
                 
                         
                 ?>
             <div class="tab-content col-md-12 ">
                 <div class="table-responsive">
-                            <table class="table">
+                    <table class="table" >
                                 <thead>
-                                <th>Observa&ccedil;&atilde;o</th><th>Hora da Agenda</th><th>Paciente</th><th>Idade</th><th>Recep&ccedil;&atilde;o</th><th><center>Espera</center></th><th>Previs&atilde;o</th><th>Status</th>
+                                <th>Observa&ccedil;&atilde;o</th><th>Hora da Agenda</th><th>Paciente</th><th>Idade</th><th>Recep&ccedil;&atilde;o</th><TH>Situa&ccedil;&atilde;o</TH><th><center>Espera</center></th><th>Previs&atilde;o</th><th>Status</th>
                                </thead>
                                <?php
                                 while ($pacienteList->hasNextPaciente()){
                                     $paciente = $pacienteList->getNextPaciente();
+                                    $prioridade = $paciente->getPrioridade();
                                     if($paciente->getNum() == "ATENDIDO"){
                                         $num = "<img src='./img/published.png' title='Atendido'>";
                                     }else if ($paciente->getNum() == "EM ATENDIMENTO")
                                     {
                                           $num = "<img src='./img/ESTETOS.png' title='Em atendimento' height=25>";
                                         } 
-                                        else{
-                                         //$num = $paciente->getNum();
-                                      
-                                      $num = "<img src=./img/boneco1.png>
-                                                 <center><p >   ".$paciente->getNum()." </p></center>
-                                            </div>";
-                                       
-                                   
+                                    else{
+                                                //$num = $paciente->getNum();
+                                             if($prioridade == "NORMAL"){
+                                                 $num = "<img src=./img/normal.png height=30>
+                                                        <center><p >   ".$paciente->getNum()." </p></center>
+                                                   </div>";
+                                             }elseif($prioridade == "SEM SENHA"){
+                                                 $num = "<img src=./img/semsenha.png height=30>
+                                                        <center><p >   ".$paciente->getNum()." </p></center>
+                                                   </div>";
+                                             }
+                                             elseif($prioridade == "PRIORIDADE"){
+                                                   $num = "<img src=./img/PRIORIDADE.png height=30>
+                                                              <center><p >   ".$paciente->getNum()." </p></center>
+                                                         </div>";
+                                             }
+
                                     }
                                ?>
                                <tr>
@@ -160,9 +169,10 @@ if(isset($_GET['nome'])){
                                    <td><?php echo $paciente->getPaciente(); ?></td>  
                                    <td><?php echo $paciente->getIdade(); ?></td>  
                                    <td align="center"><?php echo $paciente->getHoraAtendimento(); ?></td>
+                                   <td align="center"><?php echo $paciente->getSituacao(); ?></td>
                                    <td align="center"><?php echo $paciente->getEspera(); ?></td>
                                    <td align="center"><?php echo $paciente->getPrevisaoHora(); ?></td>
-                                   <td align="center"><?php echo $num; ?></td>  
+                                   <td align="center"><a href="#div" onclick="toolTip('<b><?php echo $prioridade; ?></b>', 150, 200)"  onmouseout="toolTip()"><?php echo $num; ?></a></td>  
                                    
                                </tr>
                                <?php 

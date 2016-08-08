@@ -17,7 +17,50 @@ class Paciente {
     private $codigoAtendimento;
     private $espera;
     private $previsaoHora;
-    public  function getPrevisaoHora() {
+    private $senha;
+    private $situacao;
+    private $media;
+    private $prioridade;
+    
+    public function getPrioridade() {
+        return $this->prioridade;
+    }
+
+    public function setPrioridade($prioridade) {
+        $this->prioridade = $prioridade;
+        return $this;
+    }
+
+        
+    public function getMedia() {
+        return $this->media;
+    }
+
+    public function setMedia($media) {
+        $this->media = $media;
+        return $this;
+    }
+
+        public function getSituacao() {
+        return $this->situacao;
+    }
+
+    public function setSituacao($situacao) {
+        $this->situacao = $situacao;
+        return $this;
+    }
+
+    public function getSenha() {
+        return $this->senha;
+    }
+
+    public function setSenha($senha) {
+        $this->senha = $senha;
+        return $this;
+    }
+
+    
+        public  function getPrevisaoHora() {
         return $this->previsaoHora;
     }
 
