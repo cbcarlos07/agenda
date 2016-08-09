@@ -87,6 +87,7 @@ if(isset($_GET['nome'])){
                     $pacienteList_in =  $pc->lista( $_SESSION['data'], $_SESSION['codigo']);
                     $pacienteList = new PacienteListIterator($pacienteList_in);
                     $pacienteList1 = new PacienteListIterator($pacienteList_in);
+                   
                     if ($pacienteList1->hasNextPaciente()){
                         $paciente1 = $pacienteList1->getNextPaciente();
                         $media = $paciente1->getMedia();

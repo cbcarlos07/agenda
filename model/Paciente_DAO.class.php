@@ -368,7 +368,7 @@ class Paciente_DAO{
                    if(isset($row['MEDIA'])){
                        $media = $row['MEDIA'];
                    }else{
-                       $media = 'AGURDANDO ATENDIMENTO';
+                       $media = 'AGUARDANDO ATENDIMENTO';
                    }
                    
                    if(isset($row['DS_SENHA'])){
