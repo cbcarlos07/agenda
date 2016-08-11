@@ -12,12 +12,16 @@ and open the template in the editor.
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta http-equiv="refresh" content="30">
         <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap.css" rel="stylesheet">
         <link href="css/style.css" rel="stylesheet">
         <link href="css/agenda.css" rel="stylesheet">
+        <link href="css/font-awesome.min.css" rel="stylesheet">
         <link href="css/jquery.datetimepicker.min.css" rel="stylesheet">
         <link href="css/autocomplete.css" rel="stylesheet">
+       
         <link rel="shortcut icon" href="img/ham.png">        
         <script src="js/jquery.js.js"></script>
+        <script src="js/busca.js"></script>
     </head>
     <body>
         <!-- Modal -->
@@ -42,14 +46,22 @@ and open the template in the editor.
         ?>
         <div id="main" class="container-fluid">
             
-            <CENTER><h2 class="btn btn-primary btn-block titulo">LISTA DE PRESTADORES</h2>
-            <div class="form-group">
-               <!-- <input id="searchinput" class="form-control" type="search" placeholder="Search..." onkeyup="buscarNoticias(this.value)"/> -->
+            <CENTER><h2 class="btn btn-primary btn-block titulo">LISTA DE PRESTADORES</h2>     </center>        
+                 
+                   
+             <!-- Validation -->
+        <div class="form-group col-lg-12">
+            <div class="form-group has-feedback">
+                
+                <input type="text" class="form-control" id="busca" onkeyUp="carregar()" placeholder="Pesquisar M&eacute;dico"/>
+                <span class="glyphicon glyphicon-search form-control-feedback"></span>
             </div>
-            </center>           
+
+        
+        </div>
             <div row>
                 <div class="card card-block" >
-                    <div class="list-group medicos">
+                    <div class="list-group medicos" id="searchlist">
                         <?php
                             require_once './controller/Prestador_Controller.class.php';
                             require_once './beans/Prestadores.class.php';
@@ -62,7 +74,7 @@ and open the template in the editor.
                                 $prest = $pLista->getNextPrestadores();
                              ?>
                         <div class="col-xs-12 col-sm-4 col-lg-3">
-                            <div id="searchlist" class="list-group">
+                            <div  class="list-group">
                                 
                                 <A href="lista.php?codigo=<?php echo $prest->getId(); ?>&&nome=<?php echo $prest->getNome(); ?>" class="btn btn-default list-group-item" id="#<?php echo $prest->getId(); ?>" role="button" aria-pressed="true" onclick="medico(<?php echo $prest->getId(); ?>);">
                                         <span><?php echo $prest->getNome(); ?></span> 
