@@ -6,26 +6,36 @@ and open the template in the editor.
 -->
 
 <?php
-
+include "timezone.php";
 session_start();
+require_once "beans/Data.class.php";
+require_once "controller/Data_Controller.class.php";
+
+$objData = new Data();
+$dataController = new Data_Controller();
+$objData = $dataController->getDataDB();
+
 if(!isset($_POST['datepicker'])){
-                    $data = date('d/m/Y');
+                    $data = $objData->getData();
                     $_SESSION['data'] = $data;
+
                 }else{
                     $data = $_POST['datepicker'];
                     $_SESSION['data'] = $data;
                 }
-                
-if(isset($_GET['codigo'])){
-    $cd_prestador = $_GET['codigo'];
+
+
+
+if(isset($_POST['codigo'])){
+    $cd_prestador = $_POST['codigo'];
     $_SESSION['codigo'] = $cd_prestador;
 }else{
     $cd_prestador = $_SESSION['codigo'];
     $_SESSION['codigo'] = $cd_prestador;
 }
 
-if(isset($_GET['nome'])){
-    $nm_prestador = $_GET['nome'];
+if(isset($_POST['nome'])){
+    $nm_prestador = $_POST['nome'];
     $_SESSION['nome'] = $nm_prestador;
 }else{
     $nm_prestador = $_SESSION['nome'];
@@ -50,30 +60,16 @@ if(isset($_GET['nome'])){
         <script src="js/tooltip.js"></script>
     </head>
     <body >
-        <!-- Modal -->
-<div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modalLabel">Excluir Item</h4>
-            </div>
-            <div class="modal-body">Deseja realmente excluir este item? </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Sim</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">N&atilde;o</button>
-            </div>
-        </div>
-    </div>
-</div>
+
         
         <?php
          include './barra.php';
         ?>
         <div id="main" class="container-fluid ">
             <br>
+
             <div class="col-md-12 " >
-                <center><h3 style="font-weight: bold;"><?php echo $_SESSION['nome']; ?></h3></center>
+                <div style="text-align: center;"><h3 style="font-weight: bold;"><?php echo $_SESSION['nome']; ?></h3></div>
                  <div class="col-md-11 " align="right">
                      <?php
                      require_once './controller/Paciente_Controller.class.php';
@@ -100,15 +96,15 @@ if(isset($_GET['nome'])){
            
             
           <!--  <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">-->
-                    <div class="row col-md-12 "> 
+                    <div class="row col-md-12 ">
                       
                          
-                             <center> 
+                             <div style="margin-left: 40%;">
                                  <div class="form-group formulario  " >
                                         <!-- <label for="data-agenda">Data</label> -->
                                          <input type="text" name="datepicker" id="datepicker" value="<?php echo $data;  ?>" size="10" class="form-control data-agenda"  />
                                  </div>
-                             </center>   
+                             </div>
                          <!--</div>-->
                          <!--<div class="col-md-6"> -->
 

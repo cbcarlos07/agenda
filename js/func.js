@@ -42,4 +42,16 @@ req.send(null);
  * and open the template in the editor.
  */
 
+$('.btn-prestador').on('click',function () {
+	var id   = $(this).data('id');
+    var nome = $(this).data('nome');
+    var url  = $(this).data('url');
+    var form = $('<form action="'+url+'" method="post">'+
+				   '<input type="hidden" value="'+id+'" name="codigo" />'+
+				   '<input type="hidden" value="'+nome+'" name="nome" />'+
+			   '</form>');
+    $('body').append(form);
+    form.submit();
+});
+
 

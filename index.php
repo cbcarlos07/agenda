@@ -4,6 +4,9 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
+<?php
+include "timezone.php";
+?>
 <html>
     <head>
         <title>Lista de Espera</title>
@@ -46,7 +49,7 @@ and open the template in the editor.
         ?>
         <div id="main" class="container-fluid">
             
-            <CENTER><h2 class="btn btn-primary btn-block titulo">LISTA DE PRESTADORES</h2>     </center>        
+            <div style="text-align: center;"><h2 class="btn btn-primary btn-block titulo">LISTA DE PRESTADORES</h2>    </div>
                  
                    
              <!-- Validation -->
@@ -76,7 +79,12 @@ and open the template in the editor.
                         <div class="col-xs-12 col-sm-4 col-lg-3">
                             <div  class="list-group">
                                 
-                                <A href="lista.php?codigo=<?php echo $prest->getId(); ?>&&nome=<?php echo $prest->getNome(); ?>" class="btn btn-default list-group-item" id="#<?php echo $prest->getId(); ?>" role="button" aria-pressed="true" onclick="medico(<?php echo $prest->getId(); ?>);">
+                                <A href="#" data-url="lista.php"
+                                   data-id="<?php echo $prest->getId(); ?>"
+                                   data-nome="<?php echo $prest->getNome(); ?>"
+                                   class="btn btn-default list-group-item btn-prestador"
+                                   role="button" aria-pressed="true"
+                                   >
                                         <span><?php echo $prest->getNome(); ?></span> 
                                  </a>
                               
@@ -125,6 +133,7 @@ and open the template in the editor.
         <script type="text/javascript" src="js/jquery.autocomplete.js"></script>
         <script type="text/javascript" src="js/countries.js"></script>
         <script type="text/javascript" src="js/demo.js"></script>
+        <script type="text/javascript" src="js/jquery.min.js"></script>
         
         <script type="text/javascript" src="js/func.js"></script>
     </body>

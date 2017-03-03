@@ -19,18 +19,32 @@ class Prestadores_DAO{
            
            try{
                $sql_text = "SELECT DISTINCT 
-                                P.CD_PRESTADOR
-                                ,P.NM_PRESTADOR
-                           FROM DBAMV.AGENDA_CENTRAL AC
-                               ,DBAMV.PRESTADOR P
-                               ,DBAMV.IT_AGENDA_CENTRAL IAC
-                          WHERE AC.CD_PRESTADOR = P.CD_PRESTADOR
-                            AND AC.CD_AGENDA_CENTRAL = IAC.CD_AGENDA_CENTRAL
-                            AND IAC.CD_ATENDIMENTO IS NOT NULL
-                            AND TO_CHAR(DT_AGENDA,'DD/MM/YYYY') = TO_CHAR(SYSDATE,'DD/MM/YYYY')
-                            AND TP_AGENDA = 'A'
-                            AND P.NM_PRESTADOR LIKE :NOME
-                         ORDER BY 2";
+                            P.CD_PRESTADOR
+                            ,P.NM_PRESTADOR
+                       FROM DBAMV.AGENDA_CENTRAL AC
+                           ,DBAMV.PRESTADOR P
+                           ,DBAMV.IT_AGENDA_CENTRAL IAC
+                      WHERE AC.CD_PRESTADOR = P.CD_PRESTADOR
+                        AND AC.CD_AGENDA_CENTRAL = IAC.CD_AGENDA_CENTRAL
+                        AND IAC.CD_ATENDIMENTO IS NOT NULL
+                        AND TO_CHAR(DT_AGENDA,'DD/MM/YYYY') = TO_CHAR(SYSDATE,'DD/MM/YYYY')
+                        AND TP_AGENDA = 'A'
+                        AND P.NM_PRESTADOR LIKE :NOME
+
+                      UNION
+
+                      SELECT DISTINCT 
+                             PRESTADOR.CD_PRESTADOR
+                            ,PRESTADOR.NM_PRESTADOR
+                        FROM ATENDIME
+                            ,PRESTADOR
+                       WHERE ATENDIME.CD_PRESTADOR = PRESTADOR.CD_PRESTADOR
+                         AND ATENDIME.CD_DES_ATE IS NOT NULL
+                         AND ATENDIME.TP_ATENDIMENTO = 'A'
+                         AND TO_CHAR(ATENDIME.DT_ATENDIMENTO,'DD/MM/YYYY') = TO_CHAR(SYSDATE,'DD/MM/YYYY')
+                         AND PRESTADOR.NM_PRESTADOR LIKE :NOME
+
+                      ORDER BY 2";
                $statement = oci_parse($conn, $sql_text);
                oci_bind_by_name($statement, ':NOME', $nome);
                oci_execute($statement);
