@@ -55,3 +55,15 @@ $('.btn-prestador').on('click',function () {
 });
 
 
+function clicar(id, nome, url) {
+    //alert('Alert: '+id);
+    var form = $('<form action="'+url+'" method="post">'+
+        '<input type="hidden" value="'+id+'" name="codigo" />'+
+        '<input type="hidden" value="'+nome+'" name="nome" />'+
+        '</form>');
+    $('body').append(form);
+    form.submit();
+};
+
+
+

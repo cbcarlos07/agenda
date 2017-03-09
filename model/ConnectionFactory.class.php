@@ -1,13 +1,13 @@
 <?php   
 class ConnectionFactory{
-    private $ora_user = "login";
-    private $ora_senha = "senha";
+    private $ora_user = "dbamv";
+    private $ora_senha = "#hosp#dvmns";
     private $ora_bd = "(DESCRIPTION=
                         (ADDRESS_LIST=
-                        (ADDRESS=(PROTOCOL=TCP)(HOST=IP-SERVER)(PORT=1521))
+                        (ADDRESS=(PROTOCOL=TCP)(HOST=10.51.26.60)(PORT=1521))
                         )
                         (CONNECT_DATA=
-                        (SERVICE_NAME=service)
+                        (SERVICE_NAME=prdmv)
                         )
                         )"; 
     public  function  getConnection(){

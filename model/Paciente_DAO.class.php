@@ -115,6 +115,7 @@ SELECT IND
                              AND A.CD_ATENDIMENTO         = TA.CD_ATENDIMENTO(+)
                              AND A.CD_PACIENTE            = P.CD_PACIENTE
                              AND AV.CD_PACIENTE(+)        = P.CD_PACIENTE
+							 AND A.CD_ORI_ATE = 1
                              AND A.TP_ATENDIMENTO = 'A'
                              AND A.CD_PRESTADOR = :MEDICO
                              AND TA.SN_PRIORIDADE_ESPECIAL = 'S'
@@ -198,6 +199,7 @@ SELECT IND
                          AND A.TP_ATENDIMENTO = 'A'
                          AND A.CD_PRESTADOR = :MEDICO
                          AND (TA.SN_PRIORIDADE_ESPECIAL = 'N' OR TA.DS_SENHA IS NULL)
+						 AND A.CD_ORI_ATE = 1
                          AND to_char(A.DT_ATENDIMENTO,'DD/MM/YYYY') = NVL(:DATA,TO_CHAR(SYSDATE,'DD/MM/YYYY'))
 
                     GROUP BY P.NM_PACIENTE
@@ -242,6 +244,7 @@ SELECT IND
                          AND A.CD_PACIENTE         = P.CD_PACIENTE
                          AND A.TP_ATENDIMENTO = 'A'
                          AND A.CD_PRESTADOR = :MEDICO
+						 AND A.CD_ORI_ATE = 1
                          AND to_char(A.DT_ATENDIMENTO,'DD/MM/YYYY') = NVL(:DATA,TO_CHAR(SYSDATE,'DD/MM/YYYY'))
                          GROUP BY (DBAMV.FNC_MV_RECUPERA_DATA_HORA(A.DT_ALTA,A.HR_ALTA))
                                  ,P.NM_PACIENTE,A.DT_ALTA
@@ -282,6 +285,7 @@ SELECT IND
                  AND to_char(A.DT_ATENDIMENTO,'DD/MM/YYYY') = NVL(:DATA,TO_CHAR(SYSDATE,'DD/MM/YYYY'))
                  AND DC.DH_CRIACAO IS NULL
                  AND A.DT_ALTA IS NULL
+				 AND A.CD_ORI_ATE = 1
                  
 UNION
 
@@ -304,6 +308,7 @@ UNION
                          AND to_char(A.DT_ATENDIMENTO,'DD/MM/YYYY') = NVL(:DATA,TO_CHAR(SYSDATE,'DD/MM/YYYY'))
                          AND DC.DH_CRIACAO IS NULL
                          AND A.DT_ALTA IS NULL
+						 AND A.CD_ORI_ATE = 1
                        order by 4
                        ) A -- EXIBE OS PACIENTES COM ATENDIMENTO 
 
@@ -312,7 +317,7 @@ UNION
       ) B -- ORDEM DE CHAMADA
 
 
-  WHERE A.COD_ATD = B.COD_ATD(+) ";
+  WHERE A.COD_ATD = B.COD_ATD(+)  ";
                //AND to_char(SO.DT_EXECUCAO,'DD/MM/YYYY') = NVL(:DATA,TO_CHAR(SYSDATE,'DD/MM/YYYY'))
                $statement = oci_parse($conn, $sql_text);
                //print_r($sql_text);

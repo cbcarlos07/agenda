@@ -41,6 +41,7 @@ class Prestadores_DAO{
                        WHERE ATENDIME.CD_PRESTADOR = PRESTADOR.CD_PRESTADOR
                          AND ATENDIME.CD_DES_ATE IS NOT NULL
                          AND ATENDIME.TP_ATENDIMENTO = 'A'
+						 AND ATENDIME.CD_ORI_ATE = 1
                          AND TO_CHAR(ATENDIME.DT_ATENDIMENTO,'DD/MM/YYYY') = TO_CHAR(SYSDATE,'DD/MM/YYYY')
                          AND PRESTADOR.NM_PRESTADOR LIKE :NOME
 

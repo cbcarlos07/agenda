@@ -1,3 +1,5 @@
+
+
 <?php
 
 /* 
@@ -10,6 +12,7 @@ require_once './controller/Prestador_Controller.class.php';
 require_once './beans/Prestadores.class.php';
 require_once './servicos/PrestadorListIterator.class.php';
 $p = new Prestador_Controller();
+
 if($nome == ""){
     $nome = "%";
 }else{
@@ -23,11 +26,17 @@ while ($pLista->hasNextPrestadores()){
  ?>
 <div class="col-xs-12 col-sm-4 col-lg-3">
  <div  class="list-group">
-        <A href="lista.php?codigo=<?php echo $prest->getId(); ?>&&nome=<?php echo $prest->getNome(); ?>" class="btn btn-default list-group-item" id="#<?php echo $prest->getId(); ?>" role="button" aria-pressed="true" onclick="medico(<?php echo $prest->getId(); ?>);">
-           <span><?php echo $prest->getNome(); ?></span> 
-        </a>
+     <a href="#"
+        class="btn btn-default list-group-item btn-prestador"
+        role="button" aria-pressed="true"
+        onclick="clicar(<?php echo $prest->getId(); ?>, '<?php echo $prest->getNome(); ?>', 'lista.php')"
+     >
+         <span><?php echo $prest->getNome(); ?></span>
+     </a>
   </div>    
-</div>                                
+</div>
+
 <?php
 }   
  ?>
+
