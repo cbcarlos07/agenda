@@ -26,12 +26,12 @@ if(!isset($_POST['datepicker'])){
 
 
 
-if(isset($_POST['codigo'])){
-    $cd_prestador = $_POST['codigo'];
-    $_SESSION['codigo'] = $cd_prestador;
+if(isset($_POST['cd_prestador'])){
+    $cd_prestador = $_POST['cd_prestador'];
+    $_SESSION['cd_prestador'] = $cd_prestador;
 }else{
-    $cd_prestador = $_SESSION['codigo'];
-    $_SESSION['codigo'] = $cd_prestador;
+    $cd_prestador = $_SESSION['cd_pestador'];
+    $_SESSION['cd_pestador'] = $cd_prestador;
 }
 
 if(isset($_POST['nome'])){
@@ -40,6 +40,14 @@ if(isset($_POST['nome'])){
 }else{
     $nm_prestador = $_SESSION['nome'];
     $_SESSION['nome'] = $nm_prestador;
+}
+
+if(isset($_POST['maquina'])){
+    $maquina = $_POST['maquina'];
+    $_SESSION['maquina'] = $maquina;
+}else{
+    $maquina = $_SESSION['maquina'];
+    $_SESSION['maquina'] = $maquina;
 }
 
 ?>
@@ -80,10 +88,10 @@ if(isset($_POST['nome'])){
                     $pc =  new Paciente_Controller();
                     $paciente = new Paciente();
                     $paciente1 = new Paciente();
-                    $pacienteList_in =  $pc->lista( $_SESSION['data'], $_SESSION['codigo']);
+                    $pacienteList_in =  $pc->lista( $_SESSION['data'], $_SESSION['cd_prestador']);
                     $pacienteList = new PacienteListIterator($pacienteList_in);
                     $pacienteList1 = new PacienteListIterator($pacienteList_in);
-                   
+                     $media = "";
                     if ($pacienteList1->hasNextPaciente()){
                         $paciente1 = $pacienteList1->getNextPaciente();
                         $media = $paciente1->getMedia();
@@ -99,7 +107,7 @@ if(isset($_POST['nome'])){
                     <div class="row col-md-12 ">
                       
                          
-                             <div style="margin-left: 40%;">
+                             <div style="margin: auto 43.4%;">
                                  <div class="form-group formulario  " >
                                         <!-- <label for="data-agenda">Data</label> -->
                                          <input type="text" name="datepicker" id="datepicker" value="<?php echo $data;  ?>" size="10" class="form-control data-agenda"  />
@@ -119,59 +127,83 @@ if(isset($_POST['nome'])){
                        
                      </div>
            <!--  </form>-->
-                <?php
-                
-                
-                
-                        
-                ?>
+            <div class="row"></div>
+            <div class="col-md-3"></div>
+            <div class="row col-md-6">
+                <div class="mensagem alert " style="text-align: center; position: absolute; margin-left: 32%"></div>
+            </div>
+            <div class="row"></div>
+            <br> <br> <br>
+            <div class="col-md-3"></div>
+
             <div class="tab-content col-md-12 ">
                 <div class="table-responsive">
                     <table class="table" >
+                          <!-- CABEÇA~LHO DA TABELA -->
                                 <thead>
-                                <th>Observa&ccedil;&atilde;o</th><th>Hora da Agenda</th><th>Paciente</th><th>Idade</th><th>Recep&ccedil;&atilde;o</th><TH>Situa&ccedil;&atilde;o</TH><th><center>Espera</center></th><th>Previs&atilde;o</th><th>Status</th>
+                                <th>Observa&ccedil;&atilde;o</th>
+                                <th>Hora da Agenda</th>
+                                <th>Paciente</th>
+                                <th>Idade</th>
+                                <th>Recep&ccedil;&atilde;o</th>
+                                <TH>Situa&ccedil;&atilde;o</TH>
+                                <th
+                                        style="text-align: center;">Espera
+                                </th>
+                                <th>Previs&atilde;o</th>
+                                <th>Status</th>
+                                <th></th>
+
                                </thead>
                                <?php
-                                while ($pacienteList->hasNextPaciente()){
-                                    $paciente = $pacienteList->getNextPaciente();
-                                    $prioridade = $paciente->getPrioridade();
-                                    if($paciente->getNum() == "ATENDIDO"){
-                                        $num = "<img src='./img/published.png' title='Atendido'>";
-                                    }else if ($paciente->getNum() == "EM ATENDIMENTO")
-                                    {
-                                          $num = "<img src='./img/ESTETOS.png' title='Em atendimento' height=25>";
-                                        } 
-                                    else{
-                                                //$num = $paciente->getNum();
-                                             if($prioridade == "NORMAL"){
-                                                 $num = "<img src=./img/normal.png height=30>
-                                                        <center><p >   ".$paciente->getNum()." </p></center>
+                               while ($pacienteList->hasNextPaciente()){
+                                   $paciente = $pacienteList->getNextPaciente();
+                                   $prioridade = $paciente->getPrioridade();
+                                   if($paciente->getNum() == "ATENDIDO"){
+                                       $num = "<img src='./img/published.png' title='Atendido'>";
+                                   }else if ($paciente->getNum() == "EM ATENDIMENTO")
+                                   {
+                                       $num = "<img src='./img/ESTETOS.png' title='Em atendimento' height=25>";
+                                   }
+                                   else{
+                                       //$num = $paciente->getNum();
+                                       if($prioridade == "NORMAL"){
+                                           //posicionando o numero dentro da coluna
+                                           $num = "<img src='./img/normal.png' height='30'>
+                                                        <div style='text-align: center;'><p >   " .$paciente->getNum(). " </p></div>
                                                    </div>";
-                                             }elseif($prioridade == "SEM SENHA"){
-                                                 $num = "<img src=./img/semsenha.png height=30>
-                                                        <center><p >   ".$paciente->getNum()." </p></center>
+                                       }elseif($prioridade == "SEM SENHA"){
+                                           $num = "<img src='./img/semsenha.png' height='30'>
+                                                        <div style='text-align: center;'><p >   " .$paciente->getNum(). " </p></div>
                                                    </div>";
-                                             }
-                                             elseif($prioridade == "PRIORIDADE"){
-                                                   $num = "<img src=./img/PRIORIDADE.png height=30>
-                                                              <center><p >   ".$paciente->getNum()." </p></center>
+                                       }
+                                       elseif($prioridade == "PRIORIDADE"){
+                                           $num = "<img src='./img/PRIORIDADE.png' height='30'>
+                                                              <div style='text-align: center;'><p >   " .$paciente->getNum(). " </p></div>
                                                          </div>";
-                                             }
+                                       }
 
-                                    }
-                               ?>
-                               <tr>
-                                   <td align="center"><?php echo $paciente->getObs(); ?></td>  
-                                   <td align="center"><?php echo $paciente->getHora(); ?></td>  
-                                   <td><?php echo $paciente->getPaciente(); ?></td>  
-                                   <td><?php echo $paciente->getIdade(); ?></td>  
-                                   <td align="center"><?php echo $paciente->getHoraAtendimento(); ?></td>
-                                   <td align="center"><?php echo $paciente->getSituacao(); ?></td>
-                                   <td align="center"><?php echo $paciente->getEspera(); ?></td>
-                                   <td align="center"><?php echo $paciente->getPrevisaoHora(); ?></td>
-                                   <td align="center"><a href="#div" onclick="toolTip('<b><?php echo $prioridade; ?></b>', 150, 200)"  onmouseout="toolTip()"><?php echo $num; ?></a></td>  
-                                   
-                               </tr>
+                                   }
+                                   ?>
+                                   <tr>
+                                       <td align="center"><?php echo $paciente->getObs(); ?></td>
+                                       <td align="center"><?php echo $paciente->getHora(); ?></td>
+                                       <td><?php echo $paciente->getPaciente(); ?></td>
+                                       <td><?php echo $paciente->getIdade(); ?></td>
+                                       <td align="center"><?php echo $paciente->getHoraAtendimento(); ?></td>
+                                       <td align="center"><?php echo $paciente->getSituacao(); ?></td>
+                                       <td align="center"><?php echo $paciente->getEspera(); ?></td>
+                                       <td align="center"><?php echo $paciente->getPrevisaoHora(); ?></td>
+                                       <td align="center"><a href="#div" onclick="toolTip('<b><?php echo $prioridade; ?></b>', 150, 200)"  onmouseout="toolTip()"><?php echo $num; ?></a></td>
+                                       <?php
+                                        if($paciente->getSenha() == ''){
+                                            $chamada = '';
+                                        }else{
+                                            $chamada = "<a href='#' data-atendimento='".$paciente->getCodigoAtendimento()."' data-maquina='$maquina' class='btn-chamar'><img src='img/speaker.png' width='30'></a>";
+                                        }
+                                       ?>
+                                       <td align="center"><?php echo $chamada; ?></td>
+                                   </tr>
                                <?php 
                                 }
                                ?>
@@ -197,11 +229,12 @@ if(isset($_POST['nome'])){
             
         </script>
         
-        <script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="js/jquery.mockjax.js"></script>
-        <script type="text/javascript" src="js/jquery.autocomplete.js"></script>
-        <script type="text/javascript" src="js/countries.js"></script>
-        <script type="text/javascript" src="js/demo.js"></script>
+
+
+
+
+        <script type="text/javascript" src="js/func.js"></script>
     </body>
 </html>

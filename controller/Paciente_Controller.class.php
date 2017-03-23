@@ -15,4 +15,18 @@ class Paciente_Controller {
         return $lista;
                 
     }
+
+    public function getCdTriagemAtendimento($atendimento){
+        require_once '/model/Paciente_DAO.class.php';
+        $pd = new Paciente_DAO();
+        $lista = $pd->getCdTriagemAtendimento($atendimento);
+        return $lista;
+    }
+
+    public function chamarPaciente($maquina,$atendimento, $triagem){
+        require_once '/model/Paciente_DAO.class.php';
+        $pd = new Paciente_DAO();
+        $lista = $pd->chamarPaciente($maquina,$atendimento, $triagem);
+        return $lista;
+    }
 }

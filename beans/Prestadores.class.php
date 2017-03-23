@@ -9,24 +9,99 @@
 class Prestadores {
     private $id;
     private $nome;
+    private $consultorio;
+    private $valor;
+    private $maquina;
     
-    public function getId() {
+
+    /**
+     * @return mixed
+     */
+    public function getConsultorio()
+    {
+        return $this->consultorio;
+    }
+
+    /**
+     * @param mixed $consultorio
+     * @return Prestadores
+     */
+    public function setConsultorio($consultorio)
+    {
+        $this->consultorio = $consultorio;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValor()
+    {
+        return $this->valor;
+    }
+
+    /**
+     * @param mixed $valor
+     * @return Prestadores
+     */
+    public function setValor($valor)
+    {
+        $this->valor = $valor;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMaquina()
+    {
+        return $this->maquina;
+    }
+
+    /**
+     * @param mixed $maquina
+     * @return Prestadores
+     */
+    public function setMaquina($maquina)
+    {
+        $this->maquina = $maquina;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getNome() {
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNome()
+    {
         return $this->nome;
     }
 
-    public function setId($id) {
-        $this->id = $id;
-        return $this;
+    /**
+     * @param mixed $nome
+     */
+    public function setNome($nome)
+    {
+        $this->nome = $nome;
     }
 
-    public function setNome($nome) {
-        $this->nome = $nome;
-        return $this;
-    }
+
+
 
 
     

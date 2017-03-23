@@ -38,6 +38,7 @@ SELECT IND
           THEN  TO_CHAR(B.ORD-1)
         ELSE 'ATENDIDO'
        END ORDEM
+       ,A.COD_ATD
   FROM (
   
           SELECT IND
@@ -376,8 +377,7 @@ UNION
                    $paciente->setMedia($media);
                    $paciente->setPrioridade($row['PRIORIDADE']);
                    $paciente->setSenha($senha);
-				   $paciente->setMedia($media);
-                   
+                   $paciente->setCodigoAtendimento($row['COD_ATD']);
                    $pacienteList->addPaciente($paciente);
                }
               
@@ -387,5 +387,64 @@ UNION
            }
            return $pacienteList;
         }
+
+
+      public function getCdTriagemAtendimento($atendimento){
+
+          require_once 'ConnectionFactory.class.php';
+          $codigo = 0;
+          $con = new ConnectionFactory();
+          $conn = $con->getConnection();
+
+          $query = "SELECT * FROM TRIAGEM_ATENDIMENTO A 
+                   WHERE A.CD_ATENDIMENTO = :atendimento";
+
+          try{
+              $statement = oci_parse($conn, $query);
+              //print_r($sql_text);
+              oci_bind_by_name($statement, ':atendimento', $atendimento);
+
+              oci_execute($statement);
+              if($row = oci_fetch_array($statement, OCI_ASSOC)){
+                  $codigo = $row['CD_TRIAGEM_ATENDIMENTO'];
+              }
+          }catch (PDOException $exception){
+              echo "Erro: ".$exception->getMessage();
+          }
+            return $codigo;
+     }
+
+     public function chamarPaciente($maquina,$atendimento, $triagem){
+         require_once 'ConnectionFactory.class.php';
+         $status = false;
+         $con = new ConnectionFactory();
+         $conn = $con->getConnection();
+         //echo "Maquina: $maquina";
+         $parametro = "<cdmultiempresa>1</cdmultiempresa><cdatendimento>$atendimento</cdatendimento><nmmaquina>$maquina</nmmaquina><tptempoprocesso>30</tptempoprocesso><nmusuario>DBAMV</nmusuario><cdtriagematendimento>$triagem</cdtriagematendimento>";
+
+         $query = "DECLARE
+
+                    parametro VARCHAR2(4000) ;
+                    
+                    
+                     BEGIN
+                        parametro := '$parametro';
+                        prc_realiza_chamada_painel(parametro) ;
+                    
+                    END;";
+         try{
+             $statement = oci_parse($conn, $query);
+
+
+
+             oci_execute($statement);
+             $status = true;
+         }catch (PDOException $exception){
+             echo "Erro: ".$exception->getMessage();
+         }
+
+         return $status;
+
+     }
 
 } //fim daclasse

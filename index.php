@@ -23,7 +23,7 @@ include "timezone.php";
         <link href="css/autocomplete.css" rel="stylesheet">
        
         <link rel="shortcut icon" href="img/ham.png">        
-        <script src="js/jquery.js.js"></script>
+        <script src="js/jquery.js"></script>
         <script src="js/busca.js"></script>
     </head>
     <body>
@@ -32,6 +32,57 @@ include "timezone.php";
         <?php
          include 'barra.php';
         ?>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="consultorio-modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="modalLabel">Em qual consult&oacute;rio est&aacute; o m&eacute;dico?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="consultorio" style="display: none">
+                            O m&eacute;dico est&aacute; no consult&oacute;rio <b><span class="nome"></span></b>?
+                        </div>
+
+                        <div class="lista-consultorio" style="display: none;">
+                                <a href="#" data-url="lista.php"
+                                       data-toggle="modal"
+                                       data-maquina="CARLOS-PC"
+                                       data-target="#consultorio-modal"
+                                       class="btn btn-success btn-block btn-01"
+                                       role="button" aria-pressed="true"
+                                >
+                                    <span>Consult&oacute;rio 01</span>
+                                </a>
+                                <a href="#" data-url="lista.php"
+                                   data-toggle="modal"
+                                   data-target="#consultorio-modal"
+                                   class="btn btn-success btn-block"
+                                   role="button" aria-pressed="true"
+                                >
+                                    <span>Consult&oacute;rio 02</span>
+                                </a>
+                                <a href="#" data-url="lista.php"
+                                   data-toggle="modal"
+                                   data-target="#consultorio-modal"
+                                   class="btn btn-success btn-block"
+                                   role="button" aria-pressed="true"
+                                >
+                                    <span>Consult&oacute;rio 03</span>
+                                </a>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="display: none">
+                        <a href="#" type="button"  class="btn btn-primary btn-yes">Sim</a>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">N&atilde;o</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="main" class="container-fluid">
             
             <div style="text-align: center;"><h2 class="btn btn-primary btn-block titulo">LISTA DE PRESTADORES</h2>    </div>
@@ -65,6 +116,8 @@ include "timezone.php";
                             <div  class="list-group">
                                 
                                 <a href="#" data-url="lista.php"
+                                   data-toggle="modal"
+                                   data-target="#consultorio-modal"
                                    data-id="<?php echo $prest->getId(); ?>"
                                    data-nome="<?php echo $prest->getNome(); ?>"
                                    class="btn btn-default list-group-item btn-prestador"
@@ -114,10 +167,7 @@ include "timezone.php";
         
        
         <script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
-        <script type="text/javascript" src="js/jquery.mockjax.js"></script>
-        <script type="text/javascript" src="js/jquery.autocomplete.js"></script>
-        <script type="text/javascript" src="js/countries.js"></script>
-        <script type="text/javascript" src="js/demo.js"></script>
+
         <script type="text/javascript" src="js/jquery.min.js"></script>
         
         <script type="text/javascript" src="js/func.js"></script>
