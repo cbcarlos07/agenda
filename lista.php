@@ -6,8 +6,9 @@ and open the template in the editor.
 -->
 
 <?php
+ session_start();
 include "timezone.php";
-session_start();
+
 require_once "beans/Data.class.php";
 require_once "controller/Data_Controller.class.php";
 
@@ -30,8 +31,8 @@ if(isset($_POST['cd_prestador'])){
     $cd_prestador = $_POST['cd_prestador'];
     $_SESSION['cd_prestador'] = $cd_prestador;
 }else{
-    $cd_prestador = $_SESSION['cd_pestador'];
-    $_SESSION['cd_pestador'] = $cd_prestador;
+    $cd_prestador = $_SESSION['cd_prestador'];
+    $_SESSION['cd_prestador'] = $cd_prestador;
 }
 
 if(isset($_POST['nome'])){
@@ -50,6 +51,16 @@ if(isset($_POST['maquina'])){
     $_SESSION['maquina'] = $maquina;
 }
 
+if(isset($_POST['sala'])){
+    $sala = $_POST['sala'];
+    $_SESSION['sala'] = $sala;
+}else{
+    $sala = $_SESSION['sala'];
+    $_SESSION['sala'] = $sala;
+}
+
+echo "<script>alert('Cons: '+$sala</script>";
+
 ?>
 <html>
     <head>
@@ -59,25 +70,152 @@ if(isset($_POST['maquina'])){
         <meta http-equiv="refresh" content="30">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap.css" rel="stylesheet">
         <link href="css/style.css" rel="stylesheet">
         <link href="css/agenda.css" rel="stylesheet">
         <link href="css/jquery.datetimepicker.min.css" rel="stylesheet">
         <link href="css/autocomplete.css" rel="stylesheet">
+        <link href="css/login.css" rel="stylesheet">
         <link rel="shortcut icon" href="img/ham.png">        
-        <script src="js/jquery.js.js"></script>
+        <script src="js/jquery.js"></script>
         <script src="js/tooltip.js"></script>
     </head>
     <body >
 
-        
-        <?php
-         include './barra.php';
-        ?>
+    <!-- Modal -->
+    <div class="modal fade" id="consultorio-modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modalLabel">Alterar do consult&oacute;rio <b><span  class="nome"></span></b> para:</h4>
+                </div>
+                <div class="modal-body">
+
+
+                    <div class="lista-consultorio" >
+                        <div >
+                            <?php
+                            include "beans/Sala.class.php";
+                            include "controller/Sala_Controller.class.php";
+                            include "servicos/SalaListIterator.class.php";
+                            $room = new Sala();
+                            $salaController = new Sala_Controller();
+                            $lista = $salaController->getListaSala("");
+                            $salaListIterator = new SalaListIterator($lista);
+                            while($salaListIterator->hasNextSala()){
+                                $room = $salaListIterator->getNextSala();
+                                ?>
+                                <a href="#"
+                                   class="btn btn-success btn-block btn-01"
+                                   role="button" aria-pressed="true"
+                                   onclick="changePlace('<?php echo $room->getDsMaquina(); ?>',<?php echo $cd_prestador; ?>)"
+                                >
+                                    <span><?php echo $room->getDsConsultorio(); ?></span>
+                                </a>
+                                <?php
+                            }
+                            ?>
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href=".">Lista de Espera de Paciente</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#"
+                           data-toggle="modal"
+                           data-target="#login-modal">Gerenciar</a>
+                    </li>
+
+                    <li class="active dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $sala; ?> <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" data-consultorio="<?php echo $sala; ?>"
+                                   data-toggle="modal"
+                                   data-target="#consultorio-modal"
+                                   class="btn-alterar"
+                                >
+                                    <span class="glyphicon glyphicon-wrench"></span> Alterar consult&oacute;rio
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+        <div class="modal-dialog" role="document">
+            <form id="login-form" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="modalLabel">Fa&ccedil;a login para gerenciar</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mensagem">
+                            <p class="alert"></p>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="iconInput">
+                                <i class="glyphicon glyphicon-user"></i>
+                                <input type="text" class="form-control" placeholder="Login" id="login" onblur="buscar()"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="iconInput">
+                                <i class="glyphicon glyphicon-lock"></i>
+                                <input type="password" class="form-control" placeholder="Senha" id="senha" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="iconInput">
+                                <i class="glyphicon glyphicon-briefcase"></i>
+                                <input type="text" class="form-control" placeholder="Empresa" id="empresa" required=""/>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="modal-footer" >
+                        <button type="submit"  class="btn btn-primary btn-block btn-logar" onclick="logar()">Logar</button>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
         <div id="main" class="container-fluid ">
             <br>
 
             <div class="col-md-12 " >
-                <div style="text-align: center;"><h3 style="font-weight: bold;"><?php echo $_SESSION['nome']; ?></h3></div>
+                <div style="text-align: center;"><h3 style="font-weight: bold;"><?php echo $nm_prestador; ?></h3></div>
                  <div class="col-md-11 " align="right">
                      <?php
                      require_once './controller/Paciente_Controller.class.php';
@@ -236,5 +374,6 @@ if(isset($_POST['maquina'])){
 
 
         <script type="text/javascript" src="js/func.js"></script>
+        <script type="text/javascript" src="js/acaologin.js"></script>
     </body>
 </html>

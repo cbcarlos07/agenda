@@ -117,6 +117,57 @@ class Prestadores_DAO{
           return $teste;
       }
 
+    public function updateConsultorio(Prestadores $prestador){
+        include_once 'ConnectionFactory.class.php';
+        $teste = false;
+        $conn = new ConnectionFactory();
+        $conexao = $conn->getConnection();
+        $sql_text = "UPDATE DBAADV.CONSULTORIO_MEDICO SET 
+                             VALOR = :valor, MAQUINA = :maquina
+		             WHERE CD_PRESTADOR = :prestador";
+        try {
+            // echo "Nome: ".
+            $cdprestador      = $prestador->getId();
+            $valor          = $prestador->getValor(); //o valor pode ser o consultorio
+            $maquina        = $prestador->getMaquina();
+            $statement   = oci_parse($conexao, $sql_text);
+            oci_bind_by_name($statement, ":prestador", $cdprestador);
+            oci_bind_by_name($statement, ":valor", $valor);
+            oci_bind_by_name($statement, ":maquina", $maquina);
+            oci_execute($statement,  OCI_COMMIT_ON_SUCCESS);
+            $teste = true;
+            $conn->closeConnection($conexao);
+        } catch (PDOException $ex) {
+            echo " Erro: ".$ex->getMessage();
+        }
+        return $teste;
+    }
+
+
+    public function getPossuiMaquina($prestador){
+        include_once 'ConnectionFactory.class.php';
+        $teste = false;
+        $con = new ConnectionFactory();
+        $conn = $con->getConnection();
+
+        $query = "SELECT * FROM DBAADV.CONSULTORIO_MEDICO C 
+                       WHERE C.CD_PRESTADOR = :prestador";
+        try{
+            $statement = oci_parse($conn, $query);
+            oci_bind_by_name($statement, ':prestador', $prestador);
+            oci_execute($statement);
+            if($row = oci_fetch_array($statement, OCI_ASSOC)){
+                $teste = true;
+            }
+            $con->closeConnection($conn);
+        }catch(PDOException $exception){
+            echo "Erro: ".$exception->getMessage();
+        }
+        return $teste;
+    }
+
+
+
     public function getLocalValor($maquina){
         include_once 'ConnectionFactory.class.php';
         require_once 'beans/Prestadores.class.php';
@@ -140,5 +191,50 @@ class Prestadores_DAO{
         }
         return $maquina1;
     }
+
+    public function getEstaAtendendo($prestador){
+        include_once 'ConnectionFactory.class.php';
+        $teste = false;
+        $con = new ConnectionFactory();
+        $conn = $con->getConnection();
+
+        $query = "SELECT * FROM DBAADV.CONSULTORIO_CACHE A 
+                    WHERE A.CD_PRESTADOR = :prestador";
+        try{
+            $statement = oci_parse($conn, $query);
+            oci_bind_by_name($statement, ':prestador', $prestador);
+            oci_execute($statement);
+            if($row = oci_fetch_array($statement, OCI_ASSOC)){
+                $teste = true;
+            }
+            $con->closeConnection($conn);
+        }catch(PDOException $exception){
+            echo "Erro: ".$exception->getMessage();
+        }
+        return $teste;
+    }
+
+    public function insertVaiAtender($prestador){
+        include_once 'ConnectionFactory.class.php';
+        $teste = false;
+        $con = new ConnectionFactory();
+        $conn = $con->getConnection();
+
+        $query = "INSERT INTO DBAADV.CONSULTORIO_CACHE VALUES (:prestador)";
+
+        try{
+            $statement = oci_parse($conn, $query);
+            oci_bind_by_name($statement, ':prestador', $prestador);
+            oci_execute($statement);
+
+                $teste = true;
+
+            $con->closeConnection($conn);
+        }catch(PDOException $exception){
+            echo "Erro: ".$exception->getMessage();
+        }
+        return $teste;
+    }
+
 
 } //fim daclasse

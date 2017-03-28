@@ -9,16 +9,24 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href=".">Lista de Espera de Paciente</a>
+                    <a class="navbar-brand" href="adm.php">Lista de Sala</a>
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#"
-                               data-toggle="modal"
-                               data-target="#login-modal">Gerenciar</a></li>
+                        <li><a href="#" data-acao="S" class="btn-sair">Sair</a></li>
 
                     </ul>
                 </div>
             </div>
         </nav>
-        
+
+<script>
+    $('.btn-sair').on('click', function () {
+
+       var form = $('<form action="usuario.php" method="post">' +
+                    '<input type="hidden" value="S" name="acao"> ' +
+                    '</form>');
+       $('body').append(form);
+       form.submit();
+    });
+</script>

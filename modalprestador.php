@@ -6,6 +6,8 @@
  * Time: 12:24
  */
 
+
+
 $cdprestador      = 0;
 $maquina        = "";
 $consultorio    = "";
@@ -35,7 +37,7 @@ switch ($acao){
 function cadastrar($cdprestador, $maquina, $consultorio){
     include_once "beans/Prestadores.class.php";
     include_once "controller/Prestador_Controller.class.php";
-
+    //echo "Cadastrar \n";
     $prestador = new Prestadores();
 
     $prestador->setId($cdprestador);
@@ -43,14 +45,26 @@ function cadastrar($cdprestador, $maquina, $consultorio){
     $prestador->setMaquina($maquina);
 
     $prestadorController = new Prestador_Controller();
-    $teste = $prestadorController->insertConsultorio($prestador);
-    //echo $teste."\n";
+    $possuiConsultorio = $prestadorController->getPossuiMaquina($cdprestador);
+    //echo "Possui cadastro: ".$possuiConsultorio."\n";
+    if($possuiConsultorio){
+       $teste = $prestadorController->updateConsultorio($prestador);
+
+    //echo "Update: ".$teste;
+    }else{
+        $teste = $prestadorController->insertConsultorio($prestador);
+        //echo $teste."\n";
+
+     }
+    //echo "Update: ".$teste;
     if($teste){
-        echo json_encode(array("retorno"=> 1));
+        echo json_encode(array("retorno"=> 1, "valor" => getvalor($maquina)));
     }else{
         echo json_encode(array("retorno"=> 0));
     }
+
 }
+
 
 function buscar($cdprestador){
     include_once "beans/Prestadores.class.php";
@@ -58,9 +72,12 @@ function buscar($cdprestador){
     $prestadorController = new Prestador_Controller();
     $prestador = new Prestadores();
     $prestador = $prestadorController->getLocalPrestador($cdprestador);
-
+    $teste = $prestadorController->getEstaAtendendo($cdprestador);
+    if(!$teste){
+        $prestadorController->insertVaiAtender($cdprestador);
+    }
     if($prestador->getMaquina() != ""){
-        echo json_encode(array("maquina"=> $prestador->getMaquina(), "valor" => $prestador->getValor()));
+        echo json_encode(array("maquina"=> $prestador->getMaquina(), "valor" => $prestador->getValor(), "atende" => $teste));
     }else{
         echo json_encode(array("maquina"=> 0));
     }

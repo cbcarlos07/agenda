@@ -76,13 +76,15 @@ $('.btn-prestador').on('click',function () {
 
  });
 */
-var consultorio;
+
 var cd_prestador;
 var nome;
 var salvo;
 var consultorio;
 var maquina;
 $('.btn-prestador').on('click',function () {
+   // alert('Prestador');
+
     var id   = $(this).data('id');
     nome = $(this).data('nome');
     cd_prestador = id;
@@ -96,33 +98,52 @@ $('.btn-prestador').on('click',function () {
             'acao'        : 'B'
         },
         success     : function (data) {
-            //alert(data.maquina);
+          //   alert(data.maquina);
+              console.log("Atende: "+data.atende);
+              //alert("Atende: "+data.atende);
             if(data.maquina == ""){ //se ainda não possui setor salvo para o médico
+                $('#consultorio-modal').modal();
                 $('.lista-consultorio').css('display','block');
                 salvo = false;
 
 
             }else{
-                $('span.nome').text(data.valor);
-                $('.consultorio').css('display','block');
-                $('.modal-footer').css('display','block');
-                salvo = true;
-                consultorio = data.valor;
-                //alert('Maquina: '+data.maquina);
-                maquina = data.maquina;
+                if(data.atende == true){ //ja comecou a atender? se sim...
+                    var form = $('<form action="lista.php" method="post">' +
+                                '<input type="hidden" name="cd_prestador" value="'+cd_prestador+'"/>'+
+                                '<input type="hidden" name="nome" value="'+nome+'"/>'+
+                                '<input type="hidden" name="maquina" value="'+data.maquina+'"/>'+
+                                '<input type="hidden" name="sala" value="'+data.valor+'"/>'+
+                                '</form>');
+
+                    $('body').append(form);
+                    form.submit();
+
+                }else{
+                    $('#consultorio-modal').modal('show');
+                    consultorio = data.valor;
+                    $('span.nome').text(data.valor);
+                    $('.consultorio').css('display','block');
+                    $('.modal-footer').css('display','block');
+                    salvo = true;
+                    consultorio = data.valor;
+                    //alert('Maquina: '+data.maquina);
+                    maquina = data.maquina;
+                }
+
             }
         }
     });
 
 
-    // alert(nome);
-    $('.btn-01').on('click', function () {
-        var url  = $(this).data('url');
-        maquina   = $(this).data('maquina');
-    //    alert('Prestador: '+nome);
-       // alert("Salvo: "+salvo);
-        if(!salvo){
-          //  alert('Salvar');
+
+
+});
+
+// alert(nome);
+function escolherConsultrio(maquina, sala) {
+            //alert('Consultorio: '+sala);
+            //  alert('Salvar');
             $.ajax({
                 url         : 'modalprestador.php',
                 dataType    : 'json',
@@ -130,36 +151,79 @@ $('.btn-prestador').on('click',function () {
                 data        : {
                     'prestador'   : cd_prestador,
                     'maquina'     : maquina,
-                    'consultorio' : consultorio,
+                    'consultorio' : sala,
                     'acao'        : 'C'
                 },
                 success     : function (data) {
+                   // alert('Retorno escolher: '+data.retorno);
                     if(data.retorno == 1){ //se ainda não possui setor salvo para o médico
-                       console.log('Salvo com sucesso!');
-                     //  alert('Salvo com sucesso')
+                        console.log('Salvo com sucesso!');
+                        //  alert('Salvo com sucesso')
+                        var form = $('<form action="lista.php" method="post">'+
+                            '<input type="hidden" value="'+cd_prestador+'" name="cd_prestador" />'+
+                            '<input type="hidden" value="'+nome+'" name="nome" />'+
+                            '<input type="hidden" value="'+maquina+'" name="maquina" />'+
+                            '<input type="hidden" value="'+sala+'" name="sala" />'+
+                            '</form>');
+                        $('body').append(form);
+                        form.submit();
 
                     }else{
-                     //   alert('Nao salvou');
+                        //   alert('Nao salvou');
                         console.log('Não salvou');
                     }
                 }
             });
+      //  }
+
+
+
+
+
+    }
+
+
+function changePlace(maquina, cd_prestador) {
+   var sala  = "";
+   var reload = 0;
+    $.ajax({
+        url         : 'modalprestador.php',
+        dataType    : 'json',
+        type        : 'post',
+        data        : {
+            'prestador'   : cd_prestador,
+            'maquina'     : maquina,
+            'acao'        : 'C'
+        },
+        success     : function (data) {
+             //alert('Retorno escolher: '+data.retorno);
+           // reload = data.retorno;
+            if(data.retorno == 1){ //se ainda não possui setor salvo para o médico
+                console.log('Salvo com sucesso!');
+                //  alert('Salvo com sucesso')
+                sala = data.valor;
+                var form = $('<form action="lista.php" method="post">'+
+                    '<input type="hidden" value="'+maquina+'" name="maquina" />'+
+                    '<input type="hidden" value="'+sala+'" name="sala" />'+
+                    '</form>');
+                $('body').append(form);
+                form.submit();
+
+            }else{
+                //   alert('Nao salvou');
+                console.log('Não salvou');
+            }
         }
-
-
-        var form = $('<form action="'+url+'" method="post">'+
-            '<input type="hidden" value="'+cd_prestador+'" name="cd_prestador" />'+
-            '<input type="hidden" value="'+nome+'" name="nome" />'+
-            '<input type="hidden" value="'+maquina+'" name="maquina" />'+
-            '</form>');
-        $('body').append(form);
-        form.submit();
-
-
     });
+    //  }
 
-});
 
+
+
+
+
+
+}
 
 
 
@@ -188,7 +252,7 @@ $('.btn-chamar').on('click', function () {
        },
        success     : function (data) {
             if(data.retorno == 1){
-                sucesso('Chamada efetuada com sucesso!');
+                sucess('Chamada efetuada com sucesso!');
             }else{
                 errosend('N&atilde;o foi poss&iacute;vel chamar paciente')
             }
@@ -205,7 +269,7 @@ function carregando(){
 }
 
 
-function sucesso(msg){
+function sucess(msg){
     //alert("Mensagem: "+msg);
     var mensagem = $('.mensagem');
     mensagem.empty().html('<span class="alert alert-success"><strong>OK. </strong>'+msg+'</span>').fadeIn("fast");
@@ -222,15 +286,29 @@ function errosend(msg){
 
 
 $('.btn-yes').on('click', function () {
-
+    //alert("Prestador: "+cd_prestador);
 
     var form = $('<form action="lista.php" method="post">'+
         '<input type="hidden" value="'+cd_prestador+'" name="cd_prestador" />'+
         '<input type="hidden" value="'+nome+'" name="nome" />'+
         '<input type="hidden" value="'+maquina+'" name="maquina" />'+
+        '<input type="hidden" value="'+consultorio+'" name="sala" />'+
         '</form>');
     $('body').append(form);
     form.submit();
+});
+
+$('.btn-nao').on('click', function () {
+    //$('.consultorio').css('display','none');
+    $('.consultorio').fadeOut('3000');
+    $('.modal-footer').fadeOut('3000');
+    $('.lista-consultorio').fadeIn('3000');
+});
+
+$('.btn-alterar').on('click', function () {
+   var sala = $(this).data('consultorio');
+
+   $('span.nome').text(sala);
 });
 
 

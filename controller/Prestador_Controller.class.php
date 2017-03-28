@@ -36,4 +36,32 @@ class Prestador_Controller {
         $lista = $pd->getLocalValor($maquina);
         return $lista;
     }
+
+    public function getPossuiMaquina($prestador){
+        require_once '/model/Prestadores_DAO.class.php';
+        $pd = new Prestadores_DAO();
+        $lista = $pd->getPossuiMaquina($prestador);
+        return $lista;
+    }
+
+    public function updateConsultorio(Prestadores $prestador){
+        require_once '/model/Prestadores_DAO.class.php';
+        $pd = new Prestadores_DAO();
+        $lista = $pd->updateConsultorio($prestador);
+        return $lista;
+    }
+
+    public function getEstaAtendendo($prestador){
+        require_once '/model/Prestadores_DAO.class.php';
+        $pd = new Prestadores_DAO();
+        $lista = $pd->getEstaAtendendo($prestador);
+        return $lista;
+    }
+
+    public function insertVaiAtender($prestador){
+        require_once '/model/Prestadores_DAO.class.php';
+        $pd = new Prestadores_DAO();
+        $lista = $pd->insertVaiAtender($prestador);
+        return $lista;
+    }
 }
