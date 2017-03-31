@@ -23,9 +23,13 @@ $prestador = new Prestadores();
 while($prestadorListIterator->hasNextPrestadores()){
     $prestador = $prestadorListIterator->getCurrentPrestadores();
  ?>
-<A href="lista.php?codigo=<?php echo $prestador->getId(); ?>&&nome=<?php echo $prestador->getNome(); ?>" class="btn btn-default list-group-item" id="#<?php echo $prest->getId(); ?>" role="button" aria-pressed="true" onclick="medico(<?php echo $prest->getId(); ?>);">
-                                        <span><?php echo $prestador->getNome(); ?></span> 
-                                 </a>
+<A href="lista.php?codigo=<?php echo $prestador->getId(); ?>&&nome=<?php echo $prestador->getNome(); ?>"
+   class="btn btn-default list-group-item" id="#<?php echo $prest->getId(); ?>"
+   role="button"
+   aria-pressed="true"
+   onclick="medico(<?php echo $prest->getId(); ?>);">
+       <span><?php echo $prestador->getNome(); ?></span>
+   </a>
 <?php
    
     

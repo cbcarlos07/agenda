@@ -30,7 +30,7 @@ switch ($acao){
         cadastrar($cdprestador, $maquina, $consultorio);
         break;
     case 'B':
-        buscar($cdprestador);
+        buscar($cdprestador, $maquina);
         break;
 }
 
@@ -47,6 +47,14 @@ function cadastrar($cdprestador, $maquina, $consultorio){
     $prestadorController = new Prestador_Controller();
     $possuiConsultorio = $prestadorController->getPossuiMaquina($cdprestador);
     //echo "Possui cadastro: ".$possuiConsultorio."\n";
+    $atend = $prestadorController->getEstaAtendendo($cdprestador); //essa linha diz se o prestador já está atendendo [true] ou não [false]
+   // echo "Esta atendendo: ".$atend;
+    if($atend == 0){
+        $prestadorController->insertVaiAtender($cdprestador, $maquina);
+    }else{
+        $prestadorController->updateVaiAtender($cdprestador, $maquina);
+    }
+   // $prestadorController->insertVaiAtender($cdprestador, $maquina);
     if($possuiConsultorio){
        $teste = $prestadorController->updateConsultorio($prestador);
 
@@ -66,16 +74,17 @@ function cadastrar($cdprestador, $maquina, $consultorio){
 }
 
 
-function buscar($cdprestador){
+function buscar($cdprestador, $maquina){
     include_once "beans/Prestadores.class.php";
     include_once "controller/Prestador_Controller.class.php";
     $prestadorController = new Prestador_Controller();
     $prestador = new Prestadores();
-    $prestador = $prestadorController->getLocalPrestador($cdprestador);
-    $teste = $prestadorController->getEstaAtendendo($cdprestador);
-    if(!$teste){
-        $prestadorController->insertVaiAtender($cdprestador);
-    }
+    $prestador = $prestadorController->getLocalPrestador($cdprestador); //essa linha o nome da maquina e o consultorio do computador do médico
+    $teste = $prestadorController->getEstaAtendendo($cdprestador); //essa linha diz se o prestador já está atendendo [true] ou não [false]
+
+   /* if(!$teste){
+        $prestadorController->insertVaiAtender($cdprestador, $maquina);
+    }*/
     if($prestador->getMaquina() != ""){
         echo json_encode(array("maquina"=> $prestador->getMaquina(), "valor" => $prestador->getValor(), "atende" => $teste));
     }else{

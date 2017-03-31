@@ -104,22 +104,33 @@ include 'barra.php';
                         <?php
                           include "beans/Sala.class.php";
                           include "controller/Sala_Controller.class.php";
+                          include "controller/Prestador_Controller.class.php";
                           include "servicos/SalaListIterator.class.php";
                           $sala = new Sala();
+
                           $salaController = new Sala_Controller();
+                          $prestaddorController = new Prestador_Controller();
                           $lista = $salaController->getListaSala("");
                           $salaListIterator = new SalaListIterator($lista);
                           while($salaListIterator->hasNextSala()){
                               $sala = $salaListIterator->getNextSala();
+                              $ind = $prestaddorController->consultorioLivre($sala->getDsMaquina());
+                              $linha = "btn-success";
+                              $ocupado = "";
+                              if($ind > 0){
+                                  $linha = "btn-danger";
+                                  $ocupado = "(ocupado)";
+                              }
+
                           ?>
                               <a href="#"
                                  data-toggle="modal"
                                  data-target="#consultorio-modal"
-                                 class="btn btn-success btn-block btn-01"
+                                 class="btn <?php echo $linha; ?> btn-block btn-01"
                                  role="button" aria-pressed="true"
                                  onclick="escolherConsultrio('<?php echo $sala->getDsMaquina(); ?>','<?php echo $sala->getDsConsultorio(); ?>')"
                               >
-                                  <span><?php echo $sala->getDsConsultorio(); ?></span>
+                                  <span><?php echo $sala->getDsConsultorio()." ".$ocupado; ?></span>
                               </a>
                         <?php
                           }
@@ -210,6 +221,11 @@ include 'barra.php';
     </script>
     <script>
         function medico(id){
+
+
+
+
+            // **************************************************
             var form = "#"+id;
             console.log("Log: "+form);
             $(id).submit();

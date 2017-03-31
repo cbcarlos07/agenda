@@ -51,6 +51,7 @@ function login ($usuario, $senha){
     $pwd = $usuario_Controller->recuperarSenha($usuario);
     //echo "Senha do banco: $pwd Senha do usuario: $senha\n";
     $nutricao = $usuario_Controller->verificarPapel($usuario);
+  //  echo "Senha rec: ".$pwd."<br>";
     if($pwd == $senha){
         if($nutricao){
             session_start();

@@ -21,7 +21,50 @@ class Paciente {
     private $situacao;
     private $media;
     private $prioridade;
-    
+    private $maiorAtdMedico;
+    private $mediaFloat;
+
+    /**
+     * @return mixed
+     */
+    public function getMediaFloat()
+    {
+        return $this->mediaFloat;
+    }
+
+    /**
+     * @param mixed $mediaFloat
+     * @return Paciente
+     */
+    public function setMediaFloat($mediaFloat)
+    {
+        $this->mediaFloat = $mediaFloat;
+        return $this;
+    }
+
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getMaiorAtdMedico()
+    {
+        return $this->maiorAtdMedico;
+    }
+
+    /**
+     * @param mixed $maiorAtdMedico
+     * @return Paciente
+     */
+    public function setMaiorAtdMedico($maiorAtdMedico)
+    {
+        $this->maiorAtdMedico = $maiorAtdMedico;
+        return $this;
+    }
+
+
+
     public function getPrioridade() {
         return $this->prioridade;
     }

@@ -31,7 +31,7 @@ function logar(){
                     success: function( data )
                     {
                         //var retorno = data.retorno;
-                        //alert(retorno);
+                       // alert(data.retorno);
 
                         console.log("Data: "+data.retorno);
                         if(data.retorno == 1){

@@ -29,4 +29,25 @@ class Paciente_Controller {
         $lista = $pd->chamarPaciente($maquina,$atendimento, $triagem);
         return $lista;
     }
+
+    public function getNrChamada($atendimento){
+        require_once '/model/Paciente_DAO.class.php';
+        $pd = new Paciente_DAO();
+        $lista = $pd->getNrChamada($atendimento);
+        return $lista;
+    }
+
+    public function insertNrChamada($atendimento){
+        require_once '/model/Paciente_DAO.class.php';
+        $pd = new Paciente_DAO();
+        $lista = $pd->insertNrChamada($atendimento);
+        return $lista;
+    }
+
+    public function updateNrChamada($atendimento, $chamada){
+        require_once '/model/Paciente_DAO.class.php';
+        $pd = new Paciente_DAO();
+        $lista = $pd->updateNrChamada($atendimento, $chamada);
+        return $lista;
+    }
 }

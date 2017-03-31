@@ -95,6 +95,7 @@ $('.btn-prestador').on('click',function () {
         beforeSend  : carregando,
         data        : {
             'prestador'   : id,
+            'maquina'     : maquina,
             'acao'        : 'B'
         },
         success     : function (data) {
@@ -108,7 +109,7 @@ $('.btn-prestador').on('click',function () {
 
 
             }else{
-                if(data.atende == true){ //ja comecou a atender? se sim...
+                if(data.atende == 1){ //ja comecou a atender? se sim...
                     var form = $('<form action="lista.php" method="post">' +
                                 '<input type="hidden" name="cd_prestador" value="'+cd_prestador+'"/>'+
                                 '<input type="hidden" name="nome" value="'+nome+'"/>'+
@@ -228,19 +229,79 @@ function changePlace(maquina, cd_prestador) {
 
 
 
-function clicar(id, nome, url) {
+function clicar(id, nome_prestador, url) {
+
+    cd_prestador = id;
+    nome = nome_prestador;
+    $.ajax({
+        url         : 'modalprestador.php',
+        dataType    : 'json',
+        type        : 'post',
+        beforeSend  : carregando,
+        data        : {
+            'prestador'   : id,
+            'acao'        : 'B'
+        },
+        success     : function (data) {
+            //   alert(data.maquina);
+            console.log("Atende: "+data.atende);
+            //alert("Atende: "+data.atende);
+            if(data.maquina == ""){ //se ainda não possui setor salvo para o médico
+                $('#consultorio-modal').modal();
+                $('.lista-consultorio').css('display','block');
+                salvo = false;
+                return false;
+
+            }else{
+                if(data.atende == true){ //ja comecou a atender? se sim...
+                    var form = $('<form action="lista.php" method="post">' +
+                        '<input type="hidden" name="cd_prestador" value="'+cd_prestador+'"/>'+
+                        '<input type="hidden" name="nome" value="'+nome+'"/>'+
+                        '<input type="hidden" name="maquina" value="'+data.maquina+'"/>'+
+                        '<input type="hidden" name="sala" value="'+data.valor+'"/>'+
+                        '</form>');
+
+                    $('body').append(form);
+                    form.submit();
+
+                }else{
+                    $('#consultorio-modal').modal('show');
+                    consultorio = data.valor;
+                    $('span.nome').text(data.valor);
+                    $('.consultorio').css('display','block');
+                    $('.modal-footer').css('display','block');
+                    salvo = true;
+                    consultorio = data.valor;
+                    //alert('Maquina: '+data.maquina);
+                    maquina = data.maquina;
+                }
+                return true;
+
+            }
+        }
+    });
+
+
+
+
+
+
+
     //alert('Alert: '+id);
-    var form = $('<form action="'+url+'" method="post">'+
+    /*var form = $('<form action="'+url+'" method="post">'+
         '<input type="hidden" value="'+id+'" name="codigo" />'+
         '<input type="hidden" value="'+nome+'" name="nome" />'+
         '</form>');
     $('body').append(form);
-    form.submit();
+    form.submit();*/
 };
 
 $('.btn-chamar').on('click', function () {
+
     var atendimento = $(this).data('atendimento');
     var maquina     = $(this).data('maquina');
+    var chamada     = $(this).data('chamada');
+    //alert('Chamada: '+chamada);
     $.ajax({
        url         : 'chamar.php',
        dataType    : 'json',
@@ -248,7 +309,8 @@ $('.btn-chamar').on('click', function () {
        beforeSend  : carregando,
        data        : {
            'maquina'     : maquina,
-           'atendimento' : atendimento
+           'atendimento' : atendimento,
+           'chamada'     : chamada
        },
        success     : function (data) {
             if(data.retorno == 1){
@@ -311,5 +373,18 @@ $('.btn-alterar').on('click', function () {
    $('span.nome').text(sala);
 });
 
+
+$('#consultorio-modal').on('hide.bs.modal', function (event) {
+    //executar algo...
+    //alert('modal fechou');
+    location.reload();
+});
+/*
+
+$('#consultorio-modal').clickOut(function()
+{
+    ALERT('aTUALIZAR');
+});
+*/
 
 

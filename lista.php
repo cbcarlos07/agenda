@@ -59,7 +59,7 @@ if(isset($_POST['sala'])){
     $_SESSION['sala'] = $sala;
 }
 
-echo "<script>alert('Cons: '+$sala</script>";
+
 
 ?>
 <html>
@@ -99,19 +99,28 @@ echo "<script>alert('Cons: '+$sala</script>";
                             include "beans/Sala.class.php";
                             include "controller/Sala_Controller.class.php";
                             include "servicos/SalaListIterator.class.php";
+                            include "controller/Prestador_Controller.class.php";
                             $room = new Sala();
+                            $prestaddorController = new Prestador_Controller();
                             $salaController = new Sala_Controller();
                             $lista = $salaController->getListaSala("");
                             $salaListIterator = new SalaListIterator($lista);
                             while($salaListIterator->hasNextSala()){
                                 $room = $salaListIterator->getNextSala();
+                                $ind = $prestaddorController->consultorioLivre($room->getDsMaquina());
+                                $linha = "btn-success";
+                                $ocupado = "";
+                                if($ind > 0){
+                                    $linha = "btn-danger";
+                                    $ocupado = "(ocupado)";
+                                }
                                 ?>
                                 <a href="#"
-                                   class="btn btn-success btn-block btn-01"
+                                   class="btn <?php echo $linha; ?> btn-block btn-01"
                                    role="button" aria-pressed="true"
                                    onclick="changePlace('<?php echo $room->getDsMaquina(); ?>',<?php echo $cd_prestador; ?>)"
                                 >
-                                    <span><?php echo $room->getDsConsultorio(); ?></span>
+                                    <span><?php echo $room->getDsConsultorio()." ".$ocupado; ?></span>
                                 </a>
                                 <?php
                             }
@@ -294,34 +303,50 @@ echo "<script>alert('Cons: '+$sala</script>";
 
                                </thead>
                                <?php
+                               $ordem = 0;
                                while ($pacienteList->hasNextPaciente()){
                                    $paciente = $pacienteList->getNextPaciente();
                                    $prioridade = $paciente->getPrioridade();
+                                    $maiorAtdMedico = $paciente->getPrevisaoHora();
+
+
+
+
+                                   $nrchamda = "<b>".$pc->getNrChamada($paciente->getCodigoAtendimento())."</b>";
+                                   $nrchamda1 = $pc->getNrChamada($paciente->getCodigoAtendimento());
+
                                    if($paciente->getNum() == "ATENDIDO"){
                                        $num = "<img src='./img/published.png' title='Atendido'>";
+                                       $previsao = "";
+
                                    }else if ($paciente->getNum() == "EM ATENDIMENTO")
                                    {
                                        $num = "<img src='./img/ESTETOS.png' title='Em atendimento' height=25>";
+                                       $previsao = "";
                                    }
                                    else{
+
                                        //$num = $paciente->getNum();
                                        if($prioridade == "NORMAL"){
                                            //posicionando o numero dentro da coluna
                                            $num = "<img src='./img/normal.png' height='30'>
-                                                        <div style='text-align: center;'><p >   " .$paciente->getNum(). " </p></div>
-                                                   </div>";
+                                                        <div style='text-align: center;'><p >   " .$ordem. " </p></div>
+                                                ";
                                        }elseif($prioridade == "SEM SENHA"){
                                            $num = "<img src='./img/semsenha.png' height='30'>
-                                                        <div style='text-align: center;'><p >   " .$paciente->getNum(). " </p></div>
-                                                   </div>";
+                                                        <div style='text-align: center;'><p >   " .$ordem. " </p></div>
+                                                   ";
                                        }
                                        elseif($prioridade == "PRIORIDADE"){
                                            $num = "<img src='./img/PRIORIDADE.png' height='30'>
-                                                              <div style='text-align: center;'><p >   " .$paciente->getNum(). " </p></div>
-                                                         </div>";
+                                                              <div style='text-align: center;'><p >   " .$ordem. " </p></div>
+                                                         ";
                                        }
-
+                                       $ordem++;
+                                       $previsao = getPrevisao($paciente->getMediaFloat(), $maiorAtdMedico, $ordem);
                                    }
+
+
                                    ?>
                                    <tr>
                                        <td align="center"><?php echo $paciente->getObs(); ?></td>
@@ -331,16 +356,20 @@ echo "<script>alert('Cons: '+$sala</script>";
                                        <td align="center"><?php echo $paciente->getHoraAtendimento(); ?></td>
                                        <td align="center"><?php echo $paciente->getSituacao(); ?></td>
                                        <td align="center"><?php echo $paciente->getEspera(); ?></td>
-                                       <td align="center"><?php echo $paciente->getPrevisaoHora(); ?></td>
+                                       <td align="center"><?php echo $previsao; ?></td>
                                        <td align="center"><a href="#div" onclick="toolTip('<b><?php echo $prioridade; ?></b>', 150, 200)"  onmouseout="toolTip()"><?php echo $num; ?></a></td>
                                        <?php
                                         if($paciente->getSenha() == ''){
                                             $chamada = '';
                                         }else{
-                                            $chamada = "<a href='#' data-atendimento='".$paciente->getCodigoAtendimento()."' data-maquina='$maquina' class='btn-chamar'><img src='img/speaker.png' width='30'></a>";
+
+                                            $chamada = "<a href='#' data-chamada='".$nrchamda1."' data-atendimento='".$paciente->getCodigoAtendimento()."' data-maquina='$maquina' class='btn-chamar'>
+                                                            <img src='img/speaker.png' width='30'>
+                                                         </a>";
+
                                         }
                                        ?>
-                                       <td align="center"><?php echo $chamada; ?></td>
+                                       <td align="center"><?php echo $chamada." ".$nrchamda; ?></td>
                                    </tr>
                                <?php 
                                 }
@@ -377,3 +406,16 @@ echo "<script>alert('Cons: '+$sala</script>";
         <script type="text/javascript" src="js/acaologin.js"></script>
     </body>
 </html>
+
+<?php
+function getPrevisao($media, $maior, $ordem){
+     //previsao +( media * 1) = previsaonova
+    //$previsao = $maior + ($media * $ordem);
+    $dateTime = DateTime::createFromFormat('d/m/Y H:i:s', $maior, new DateTimeZone('America/Manaus'));
+    $media = "0".str_replace(",",".",$media);
+    $maiorTimeStamp = $timestamp = $dateTime->getTimestamp();
+
+    return date("H:i:s", $maiorTimeStamp +(( (24*3600) * $media)* $ordem));
+  //  return $media;
+}
+?>

@@ -58,10 +58,32 @@ class Prestador_Controller {
         return $lista;
     }
 
-    public function insertVaiAtender($prestador){
+    public function insertVaiAtender($prestador, $maquina){
         require_once '/model/Prestadores_DAO.class.php';
         $pd = new Prestadores_DAO();
-        $lista = $pd->insertVaiAtender($prestador);
+        $lista = $pd->insertVaiAtender($prestador, $maquina);
+        return $lista;
+    }
+
+    public function updateVaiAtender($prestador, $maquina){
+        require_once '/model/Prestadores_DAO.class.php';
+        $pd = new Prestadores_DAO();
+        $lista = $pd->updateVaiAtender($prestador, $maquina);
+        return $lista;
+
+    }
+
+    public function consultorioLivre($prestador){
+        require_once '/model/Prestadores_DAO.class.php';
+        $pd = new Prestadores_DAO();
+        $lista = $pd->consultorioLivre($prestador);
+        return $lista;
+    }
+
+    public function deleteVaiAtender($prestador, $maquina){
+        require_once '/model/Prestadores_DAO.class.php';
+        $pd = new Prestadores_DAO();
+        $lista = $pd->deleteVaiAtender($prestador, $maquina);
         return $lista;
     }
 }
